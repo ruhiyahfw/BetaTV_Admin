@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 const ShowVideo = () => {
@@ -103,17 +104,21 @@ const ShowVideoCategory = () => {
           />
           <button
             className="px-2 py-1 mx-2 bg-gray-300 rounded-md"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
 
               fetchData(search)
-                .then(res => {
-                  res === "There is no such category" ? updateResult([]) : updateResult(JSON.parse(res));
-                  updateFailed(search)
+                .then((res) => {
+                  res === "There is no such category"
+                    ? updateResult([])
+                    : updateResult(JSON.parse(res));
+                  updateFailed(search);
                 })
                 .catch((err) => console.log(err));
             }}
-          > Cari </button>
+          >
+            Cari
+          </button>
         </form>
         <ul className="">
           {result &&
@@ -136,11 +141,20 @@ const AddVideo = () => {
   const [showAddVideo, changeAddVid] = useState(false);
   const [judul, updateJudul] = useState("");
   const [channel, updateChannel] = useState("");
-  const [url, updateURL] = useState(""); 
+  const [url, updateURL] = useState("");
   const [views, updateViews] = useState("");
   const [rating, updateRating] = useState("");
   const [kategori, updateKategori] = useState("");
   const [deskripsi, updateDeskripsi] = useState("");
+
+  async function addNewvideo(videoData) {
+    try {
+      const response = await axios.post("http://localhost:5000/api/Video", videoData);
+      console.log(response);
+    } catch (error) {
+      console.err(error);
+    }
+  }
 
   return (
     <>
@@ -151,26 +165,216 @@ const AddVideo = () => {
         <span className="font-medium text-white"> tambah video baru </span>
       </button>
       <div className={showAddVideo ? "flex" : "hidden"}>
-        {/* 
-        "title": "string",
-        "channelId": 0,
-        "url": "string",
-        "views": 0,
-        "rating": 0,
-        "category": "string",
-        "description": "string" 
-        */}
         <form className="flex flex-col items-start">
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="Judul Video" onChange={(e) => updateJudul(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="ID Channel" onChange={(e) => updateChannel(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="url Video" onChange={(e) => updateURL(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="Jumlah Views" onChange={(e) => updateViews(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="Rating" onChange={(e) => updateRating(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="Kategori Video" onChange={(e) => updateKategori(e.target.value)}></input>
-          <input className="border-2 px-2 my-1 border-black rounded-md" type="text" placeholder="Deskripsi Video" onChange={(e) => updateDeskripsi(e.target.value)}></input>
-          <button className="px-2 py-1 my-1 bg-gray-300 rounded-md" onClick={e => {
-            e.preventDefault();
-          }}> Tambahkan Video Baru </button>
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Judul Video"
+            value={judul}
+            onChange={(e) => updateJudul(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="ID Channel"
+            value={channel}
+            onChange={(e) => updateChannel(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="url Video"
+            value={url}
+            onChange={(e) => updateURL(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Jumlah Views"
+            value={views}
+            onChange={(e) => updateViews(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Rating"
+            value={rating}
+            onChange={(e) => updateRating(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Kategori Video"
+            value={kategori}
+            onChange={(e) => updateKategori(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Deskripsi Video"
+            value={deskripsi}
+            onChange={(e) => updateDeskripsi(e.target.value)}
+          />
+          <button
+            className="px-2 py-1 my-1 bg-gray-300 rounded-md"
+            onClick={(e) => {
+              e.preventDefault();
+              const videoData = {
+                title: judul,
+                channelId: channel,
+                url: url,
+                views: views,
+                rating: rating,
+                category: kategori,
+                description: deskripsi,
+              };
+
+              addNewvideo(videoData);
+
+              updateJudul("");
+              updateChannel("");
+              updateURL("");
+              updateViews("");
+              updateRating("");
+              updateKategori("");
+              updateDeskripsi("");
+            }}
+          >
+            Tambahkan Video Baru
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
+
+const EditVideo = () => {
+  const [showUpdateVideo, changeUV] = useState(false);
+  const [idVideo, updateIDVideo] = useState("");
+  const [judul, updateJudul] = useState("");
+  const [url, updateURL] = useState("");
+  const [kategori, updateKategori] = useState("");
+  const [deskripsi, updateDeskripsi] = useState("");
+
+  async function editDataVideo(idVideo, editedData) {
+    try {
+      const response = await axios.put("http://localhost:5000/api/Video/" +  idVideo, editedData);
+      console.log(response);
+    } catch (error) {
+      console.err(error);
+    }
+  }
+
+  return(
+    <>
+      <button
+        className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
+        onClick={() => changeUV(!showUpdateVideo)}
+      >
+        <span className="font-medium text-white"> update data video </span>
+      </button>
+      <div className={showUpdateVideo ? "flex" : "hidden"}>
+        <form className="flex flex-col items-start">
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="ID Video"
+            value={idVideo}
+            onChange={(e) => updateIDVideo(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Judul Video"
+            value={judul}
+            onChange={(e) => updateJudul(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="url Video"
+            value={url}
+            onChange={(e) => updateURL(e.target.value)}
+          />   
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Kategori Video"
+            value={kategori}
+            onChange={(e) => updateKategori(e.target.value)}
+          />
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="Deskripsi Video"
+            value={deskripsi}
+            onChange={(e) => updateDeskripsi(e.target.value)}
+          />
+          <button
+            className="px-2 py-1 my-1 bg-gray-300 rounded-md"
+            onClick={(e) => {
+              e.preventDefault();
+              const videoData = {
+                title: judul,
+                url: url,
+                category: kategori,
+                description: deskripsi,
+              };
+
+              editDataVideo(idVideo, videoData);
+
+              updateIDVideo("");
+              updateJudul("");
+              updateURL("");
+              updateKategori("");
+              updateDeskripsi("");
+            }}
+          >
+            Edit Data Video
+          </button>
+        </form>
+      </div>
+    </>
+  );
+}
+
+const DeleteVideo = () => {
+  const [showDeleteVideo, changeDV] = useState(false);
+  const [idVideo, updateIDVideo] = useState("");
+  return (
+    <>
+      <button
+        className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
+        onClick={() => changeDV(!showDeleteVideo)}
+      >
+        <span className="font-medium text-white"> hapus video </span>
+      </button>
+      <div className={showDeleteVideo ? "flex" : "hidden"}>
+        <form className="flex flex-col items-start">
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md"
+            type="text"
+            placeholder="ID Video"
+            value={idVideo}
+            onChange={(e) => updateIDVideo(e.target.value)}
+          />
+          <button
+            className="px-2 py-1 my-1 bg-gray-300 rounded-md"
+            onClick={async (e) => {
+              e.preventDefault();
+
+              try {
+                const response = await axios.delete("http://localhost:5000/api/Video/" +  idVideo);
+                console.log(response);
+              } catch(error) {
+                console.error(error);
+              }
+
+              updateIDVideo("");
+            }}
+          >
+            Hapus Video
+          </button>
         </form>
       </div>
     </>
@@ -180,11 +384,6 @@ const AddVideo = () => {
 function App() {
   const [showUser, changeSU] = useState(false);
   const [deleteUser, changeDU] = useState(false);
-  //const [allVideo, changeAllVid] = useState(false);
-  //const [categoryVideo, changeCV] = useState(false);
-  //const [showAddVideo, changeAddVid] = useState(false);
-  const [showUpdateVideo, changeUV] = useState(false);
-  const [showDeleteVideo, changeDV] = useState(false);
 
   return (
     <div className="flex flex-col">
@@ -228,29 +427,13 @@ function App() {
           <ShowVideoCategory />
 
           {/* add video baru ke sistem */}
-          <AddVideo/>
+          <AddVideo />
 
           {/* update data video by id */}
-          <button
-            className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
-            onClick={() => changeUV(!showUpdateVideo)}
-          >
-            <span className="font-medium text-white"> update data video </span>
-          </button>
-          <div className={showUpdateVideo ? "flex" : "hidden"}>
-            form dengan input id video utk update data
-          </div>
+          <EditVideo/>
 
           {/* delete video by id */}
-          <button
-            className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
-            onClick={() => changeDV(!showDeleteVideo)}
-          >
-            <span className="font-medium text-white"> hapus video </span>
-          </button>
-          <div className={showDeleteVideo ? "flex" : "hidden"}>
-            form dengan input id video utk menghapus
-          </div>
+          <DeleteVideo/>
         </div>
       </div>
     </div>

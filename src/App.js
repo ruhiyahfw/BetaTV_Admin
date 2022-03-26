@@ -3,24 +3,15 @@ import { useState } from "react";
 
 const ShowVideo = () => {
   const [allVideo, changeAllVid] = useState(false);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState([]);
 
-  function fetchData() {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        resolve(JSON.parse(this.responseText));
-      };
-
-      xhr.onerror = function (err) {
-        console.log("error di fetching, message: " + err);
-        reject(err);
-      };
-
-      xhr.open("GET", "http://localhost:5000/api/Video", true);
-      xhr.send();
-    });
+  async function fetchData() {
+    try {
+      const response = await axios.get("http://localhost:5000/api/Video");
+      setContent(response.data.data.videos);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -28,24 +19,25 @@ const ShowVideo = () => {
       <button
         className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
         onClick={() => {
-          if (!content) {
-            fetchData()
-              .then((res) => setContent(res))
-              .catch((err) => console.error(err));
-          }
-
-          //console.log(content)
+          fetchData();
           changeAllVid(!allVideo);
         }}
       >
         <span className="font-medium text-white"> lihat semua video </span>
       </button>
-      <div className={allVideo ? "flex" : "hidden"}>
-        <ul className="">
+      <div className={allVideo ? "w-full flex justify-center" : "hidden"}>
+        <ul className="w-[70%]">
+          <li className="w-full flex justify-between font-semibold">
+            <span> ID </span>
+            <span> URL </span>
+            <span> Deskripsi </span>
+          </li>
           {content ? (
             content.map((el) => (
-              <li key={el.id}>
+              <li key={el.id} className="w-full flex justify-between">
+                <span> {el.id} </span>
                 <a href={el.url}> {el.title} </a>
+                <span> {el.category} </span>
               </li>
             ))
           ) : (
@@ -63,27 +55,17 @@ const ShowVideoCategory = () => {
   const [failedSearch, updateFailed] = useState("");
   const [result, updateResult] = useState();
 
-  function fetchData(category) {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        resolve(this.responseText);
-      };
-
-      xhr.onerror = function (err) {
-        console.log("error di fetching, message: " + err);
-        reject(err);
-      };
-
-      xhr.open(
-        "GET",
-        "http://localhost:5000/api/Video/category/" + category,
-        true
+  async function fetchData(category) {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/Video/category/" + category
       );
-
-      xhr.send();
-    });
+      updateResult(response.data.data.videos);
+    } catch (err) {
+      console.error(err);
+      updateResult([]);
+      updateFailed(category);
+    }
   }
 
   return (
@@ -94,10 +76,14 @@ const ShowVideoCategory = () => {
       >
         <span className="font-medium text-white">lihat video by kategori</span>
       </button>
-      <div className={categoryVideo ? "flex flex-col items-center" : "hidden"}>
-        <form className="w-24 h-auto mb-3 flex justify-around">
+      <div
+        className={
+          categoryVideo ? "w-full flex flex-col items-center" : "hidden"
+        }
+      >
+        <form className="flex flex-col items-start justify-start">
           <input
-            className="border-2 px-2 border-black rounded-md"
+            className="border-2 px-2 mb-2 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Cari kategori"
             onChange={(e) => updateSearch(e.target.value)}
@@ -106,26 +92,20 @@ const ShowVideoCategory = () => {
             className="px-2 py-1 mx-2 bg-gray-300 rounded-md"
             onClick={(e) => {
               e.preventDefault();
-
-              fetchData(search)
-                .then((res) => {
-                  res === "There is no such category"
-                    ? updateResult([])
-                    : updateResult(JSON.parse(res));
-                  updateFailed(search);
-                })
-                .catch((err) => console.log(err));
+              fetchData(search);
             }}
           >
             Cari
           </button>
         </form>
-        <ul className="">
+        <ul className="w-[70%] flex flex-col items-center">
           {result &&
             (result.length ? (
               result.map((el) => (
-                <li key={el.id}>
+                <li key={el.id} className="w-full flex justify-between">
+                  <span> {el.id} </span>
                   <a href={el.url}> {el.title} </a>
+                  <span> {el.category} </span>
                 </li>
               ))
             ) : (
@@ -149,10 +129,16 @@ const AddVideo = () => {
 
   async function addNewvideo(videoData) {
     try {
-      const response = await axios.post("http://localhost:5000/api/Video", videoData);
-      console.log(response);
+      const response = await axios.post(
+        "http://localhost:5000/api/Video",
+        videoData
+      );
+      if (response.status < 300) {
+        alert("video berhasil ditambahkan");
+      }
     } catch (error) {
-      console.err(error);
+      console.error(error);
+      alert("terjadi kesalahan penambahan video");
     }
   }
 
@@ -167,49 +153,49 @@ const AddVideo = () => {
       <div className={showAddVideo ? "flex" : "hidden"}>
         <form className="flex flex-col items-start">
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Judul Video"
             value={judul}
             onChange={(e) => updateJudul(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="ID Channel"
             value={channel}
             onChange={(e) => updateChannel(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="url Video"
             value={url}
             onChange={(e) => updateURL(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Jumlah Views"
             value={views}
             onChange={(e) => updateViews(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96" 
             type="text"
             placeholder="Rating"
             value={rating}
             onChange={(e) => updateRating(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Kategori Video"
             value={kategori}
             onChange={(e) => updateKategori(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Deskripsi Video"
             value={deskripsi}
@@ -258,14 +244,20 @@ const EditVideo = () => {
 
   async function editDataVideo(idVideo, editedData) {
     try {
-      const response = await axios.put("http://localhost:5000/api/Video/" +  idVideo, editedData);
-      console.log(response);
+      const response = await axios.put(
+        "http://localhost:5000/api/Video/" + idVideo,
+        editedData
+      );
+      if (response.status < 300) {
+        alert(`video berhasil dengan id: ${idVideo} berhasil diubah`);
+      }
     } catch (error) {
       console.err(error);
+      alert("terjadi kesalahan pengubahan video");
     }
   }
 
-  return(
+  return (
     <>
       <button
         className="w-[90%] h-12 my-4 px-4 bg-orange-400 rounded-md flex items-center"
@@ -276,35 +268,35 @@ const EditVideo = () => {
       <div className={showUpdateVideo ? "flex" : "hidden"}>
         <form className="flex flex-col items-start">
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="ID Video"
             value={idVideo}
             onChange={(e) => updateIDVideo(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Judul Video"
             value={judul}
             onChange={(e) => updateJudul(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="url Video"
             value={url}
             onChange={(e) => updateURL(e.target.value)}
-          />   
+          />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Kategori Video"
             value={kategori}
             onChange={(e) => updateKategori(e.target.value)}
           />
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="Deskripsi Video"
             value={deskripsi}
@@ -336,7 +328,7 @@ const EditVideo = () => {
       </div>
     </>
   );
-}
+};
 
 const DeleteVideo = () => {
   const [showDeleteVideo, changeDV] = useState(false);
@@ -352,7 +344,7 @@ const DeleteVideo = () => {
       <div className={showDeleteVideo ? "flex" : "hidden"}>
         <form className="flex flex-col items-start">
           <input
-            className="border-2 px-2 my-1 border-black rounded-md"
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
             type="text"
             placeholder="ID Video"
             value={idVideo}
@@ -364,9 +356,13 @@ const DeleteVideo = () => {
               e.preventDefault();
 
               try {
-                const response = await axios.delete("http://localhost:5000/api/Video/" +  idVideo);
-                console.log(response);
-              } catch(error) {
+                const response = await axios.delete(
+                  "http://localhost:5000/api/Video/" + idVideo
+                );
+                if (response.status < 300) {
+                  alert(`video dengan di ${idVideo} berhasil dihapus`);
+                }
+              } catch (error) {
                 console.error(error);
               }
 
@@ -379,41 +375,122 @@ const DeleteVideo = () => {
       </div>
     </>
   );
-}
+};
 
-function App() {
+const ShowAllUser = () => {
   const [showUser, changeSU] = useState(false);
-  const [deleteUser, changeDU] = useState(false);
+  const [content, setContent] = useState([]);
+
+  async function fetchData() {
+    try {
+      const response = await axios.get("http://localhost:5000/api/User");
+      setContent(response.data.data.users);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
-    <div className="flex flex-col">
+    <>
+      <button
+        className="w-[90%] h-12 my-4 px-4 bg-green-400 rounded-md flex items-center"
+        onClick={() => {
+          fetchData();
+          changeSU(!showUser);
+        }}
+      >
+        <span className="font-medium text-white"> lihat semua user </span>
+      </button>
+      <div className={showUser ? "w-full flex justify-center" : "hidden"}>
+        <ul className="w-[70%]">
+          <li className="w-full flex justify-between font-semibold">
+            <span> ID </span>
+            <span> Name </span>
+            <span> Username </span>
+          </li>
+          {content ? (
+            content.map((el) => (
+              <li key={el.id} className="w-full flex justify-between">
+                <span> {el.id} </span>
+                <span> {el.name} </span>
+                <span> {el.username} </span>
+              </li>
+            ))
+          ) : (
+            <></>
+          )}
+        </ul>
+      </div>
+    </>
+  );
+};
+
+const DeleteUser = () => {
+  const [showDeleteUser, changeDU] = useState(false);
+  const [idUser, updateIDUser] = useState("");
+  return (
+    <>
+      <button
+        className="w-[90%] h-12 my-4 px-4 bg-green-400 rounded-md flex items-center"
+        onClick={() => changeDU(!showDeleteUser)}
+      >
+        <span className="font-medium text-white"> hapus user </span>
+      </button>
+      <div className={showDeleteUser ? "flex" : "hidden"}>
+        <form className="flex flex-col items-start">
+          <input
+            className="border-2 px-2 my-1 border-black rounded-md lg:w-96"
+            type="text"
+            placeholder="ID User"
+            value={idUser}
+            onChange={(e) => updateIDUser(e.target.value)}
+          />
+          <button
+            className="px-2 py-1 my-1 bg-gray-300 rounded-md"
+            onClick={async (e) => {
+              e.preventDefault();
+
+              try {
+                const response = await axios.delete(
+                  "http://localhost:5000/api/User/" + idUser
+                );
+                if (response.status < 300) {
+                  alert(`user dengan di ${idUser} berhasil dihapus`);
+                }
+              } catch (error) {
+                console.error(error);
+                alert("terjadi kesalahan penghapusan user")
+              }
+
+              updateIDUser("");
+            }}
+          >
+            Hapus User
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <div className="flex flex-col justify-start items-start">
       <div className="h-16 w-screen px-8 mb-10 bg-blue-400 flex items-center rounded-b-lg">
         <h1 className="font-bold text-2xl"> Admin Page Beta.tv</h1>
       </div>
-      <div className="w-screen flex justify-center items-center">
+      <div className="w-screen flex justify-center items-start">
         {/* section user */}
         <div className="w-1/2 h-full flex flex-col items-center justify-start">
           <h1 className="font-semibold text-gray-600 text-xl"> User </h1>
 
           {/*  fetch semua user dari back end */}
-          <button
-            className="w-[90%] h-12 my-4 px-4 bg-green-400 rounded-md flex items-center"
-            onClick={() => changeSU(!showUser)}
-          >
-            <span className="font-medium text-white"> lihat semua user </span>
-          </button>
-          <div className={showUser ? "flex" : "hidden"}>list user</div>
+          <ShowAllUser/>
 
           {/* buat form lalu delete user by id */}
-          <button
-            className="w-[90%] h-12 my-4 px-4 bg-green-400 rounded-md flex items-center"
-            onClick={() => changeDU(!deleteUser)}
-          >
-            <span className="font-medium text-white"> hapus user </span>
-          </button>
-          <div className={deleteUser ? "flex" : "hidden"}>
-            form delete user by id
-          </div>
+          <DeleteUser/>
+
+          <div className="w-screen sm:h-5 lg:h-12"></div>
         </div>
 
         {/* section video */}
@@ -430,10 +507,12 @@ function App() {
           <AddVideo />
 
           {/* update data video by id */}
-          <EditVideo/>
+          <EditVideo />
 
           {/* delete video by id */}
-          <DeleteVideo/>
+          <DeleteVideo />
+
+          <div className="w-screen sm:h-5 lg:h-12"></div>
         </div>
       </div>
     </div>

@@ -1,5 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
+import ConfirmPage from "./pages/ConfirmPage";
+import HomePage from "./pages/HomePage";
 
 const ShowVideo = () => {
   const [allVideo, changeAllVid] = useState(false);
@@ -475,47 +483,13 @@ const DeleteUser = () => {
 
 function App() {
   return (
-    <div className="flex flex-col justify-start items-start">
-      <div className="h-16 w-screen px-8 mb-10 bg-blue-400 flex items-center rounded-b-lg">
-        <h1 className="font-bold text-2xl"> Admin Page Beta.tv</h1>
-      </div>
-      <div className="w-screen flex justify-center items-start">
-        {/* section user */}
-        <div className="w-1/2 h-full flex flex-col items-center justify-start">
-          <h1 className="font-semibold text-gray-600 text-xl"> User </h1>
-
-          {/*  fetch semua user dari back end */}
-          <ShowAllUser/>
-
-          {/* buat form lalu delete user by id */}
-          <DeleteUser/>
-
-          <div className="w-screen sm:h-5 lg:h-12"></div>
-        </div>
-
-        {/* section video */}
-        <div className="w-1/2 h-full flex flex-col items-center justify-start">
-          <h1 className="font-semibold text-gray-600 text-xl"> Video </h1>
-
-          {/* liat semua video */}
-          <ShowVideo />
-
-          {/* liat video kategori tertentu */}
-          <ShowVideoCategory />
-
-          {/* add video baru ke sistem */}
-          <AddVideo />
-
-          {/* update data video by id */}
-          <EditVideo />
-
-          {/* delete video by id */}
-          <DeleteVideo />
-
-          <div className="w-screen sm:h-5 lg:h-12"></div>
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/Confirm/:userId" element={<ConfirmPage/>}/>
+        <Route path="/" element={<HomePage/>}/>
+      </Routes>
+    </Router>
+    
   );
 }
 

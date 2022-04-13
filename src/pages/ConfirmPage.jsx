@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 export default function ConfirmPage() {
     const params = useParams();
     const [message, setMessage] = useState("Please Wait");
-    const userId = params.userId;
+    const token = params.token;
     useEffect(() => {
-        fetch("http://localhost:5000/api/User/Confirm/" + userId, {method:"POST"})
+        fetch("http://localhost:5000/api/User/confirm/" + token, {method:"POST"})
         .then(result => result.json())
         .then(result => {
             if (result.success) {

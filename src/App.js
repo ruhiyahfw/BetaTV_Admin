@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -485,7 +486,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/Confirm/:userId" element={<ConfirmPage/>}/>
+        <Route path="/confirm/:token" element={<ConfirmPage/>}/>
         <Route path="/" element={<HomePage/>}/>
       </Routes>
     </Router>

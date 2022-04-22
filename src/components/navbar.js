@@ -5,7 +5,7 @@ function Navbar() {
   const [showLogout, setShowLogout] = useState(false);
 
   return (
-    <div className="h-32 w-screen px-12 bg-buletinBlue flex justify-between items-center">
+    <div className="h-32 w-full px-12 bg-buletinBlue flex justify-between items-center">
       <h1 className="text-white font-semibold text-4xl">
         Beta.TV - Admin Page
       </h1>

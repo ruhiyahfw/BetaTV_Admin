@@ -15,14 +15,17 @@ function Login() {
 
 		try {
 			const login = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/User/login`, loginData);
-			window.sessionStorage.setItem('token', login.data.data.token);
+			if(login.data.data.user.level === 0) {
+				window.sessionStorage.setItem('token', login.data.data.token);
+			} else {
+				throw "not an admin";
+			}
+			window.location.href="/user";        
 		} catch (error) {
 			console.error(error)
 		} 
-
 		setusername('');
-		setpassword('');    
-		window.location.href="/user";        
+		setpassword('');  
 	}
 
 	return (

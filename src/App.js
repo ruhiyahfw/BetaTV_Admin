@@ -13,6 +13,7 @@ function App() {
         <Route path="/user" element={<UserPanel/>} />
         <Route path="/video" element={<VideoPanel/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/" element={<Login/>} />
       </Routes>
     </BrowserRouter>
   );

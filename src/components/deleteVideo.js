@@ -26,8 +26,10 @@ function DeleteVideo() {
         config
       );
       console.log(response.data);
+      window.alert("berhasil menghapus video");
     } catch (error) {
       console.error(error);
+      window.alert("gagal menghapus video: " + error);
     }
 
     setidvideo("");

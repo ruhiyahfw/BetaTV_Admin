@@ -4,6 +4,7 @@ import Navbar from './components/navbar';
 import Login from './screens/login';
 import UserPanel from './screens/userPanel';
 import VideoPanel from './screens/videoPanel';
+import ConfirmPage from './screens/ConfirmPagege';
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
         <Route path="/user" element={<UserPanel/>} />
         <Route path="/video" element={<VideoPanel/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/confirm/:token" element={<ConfirmPage/>}/>
         <Route path="/" element={<Login/>} />
       </Routes>
     </BrowserRouter>

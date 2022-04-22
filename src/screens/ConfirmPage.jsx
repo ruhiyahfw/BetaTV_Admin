@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import DownloadInfo from '../components/download-info';
 
 export default function ConfirmPage() {
 	const params = useParams();
@@ -44,7 +45,8 @@ export default function ConfirmPage() {
 		return (
 			<div className="w-full gap-6 flex justify-center mt-20 flex-col items-center">
 				<h1 className="text-center text-4xl font-semibold text-green-600">Selamat! Akun anda berhasil diaktifkan.</h1>
-				<h1 className="text-center text-2xl font-semibold">Silahkan login melalui aplikasi Beta.TV</h1>
+				<h1 className="text-center text-2xl font-semibold mb-60">Silahkan login melalui aplikasi Beta.TV</h1>
+                <DownloadInfo />
 			</div>
 		);
 	}

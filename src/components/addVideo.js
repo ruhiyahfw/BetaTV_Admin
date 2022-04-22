@@ -1,31 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getCategory } from "./getCategory";
 
 function AddVideo() {
   const [show, setShow] = useState(false);
   const [judul, setjudul] = useState("");
   const [youtubeId, setyoutubeid] = useState("");
   const [deskripsi, setdeskripsi] = useState("");
-  const [kategori, updatekategori] = useState([]);
+  const [daftarkategori, setdaftarkategori] = useState();
 
   const buttonShow =
     "w-[50rem] h-20 border-buletinBlue text-white bg-buletinDarkerBlue border-2 rounded-3xl flex justify-start items-center";
   const buttonHide =
     "w-[50rem] h-20 border-buletinBlue text-black border-2 rounded-3xl flex justify-start items-center";
 
-  function handleCheckBox(e) {
-    let arr = kategori;
-    if (e.target.checked) {
-      arr.push(e.target.value);
-    } else {
-      arr.filter((el) =>  el !== e.target.value 
-      );
-    }
-    updatekategori(arr);
+  function handleCheckBox() {
+    let arr = []
+    daftarkategori.map((el) => {
+      if(document.getElementById("add?"+el.label).checked) {
+        arr.push(el.label);
+      }
+    })
+    return arr;
   }
 
-  function checkedCheckbox(str) {
-    return kategori.includes(str)
+  function emptyCheckBox() {
+    daftarkategori.map((el) => {
+      if(document.getElementById("add?"+el.label).checked) {
+        document.getElementById("add?"+el.label).checked = false;
+      }
+    })
   }
 
   async function clickAddVideo(e) {
@@ -35,27 +39,41 @@ function AddVideo() {
       authorTitle: judul,
       authorDescription: deskripsi,
       youtubeVideoId: youtubeId,
-      categorySlugs: kategori,
+      categorySlugs: handleCheckBox(),
     };
 
     const config = {
       headers: {
-        Authorization: window.sessionStorage.getItem('token'),
+        Authorization: window.sessionStorage.getItem("token"),
       },
     };
 
     try {
-			const login = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/Video`, addVideoData, config);
-			console.log(login.data);
-		} catch (error) {
-			console.error(error)
-		} 
-    
-    setjudul('');
-    setyoutubeid('');
-    setdeskripsi('');
-    updatekategori([]);
+      const add = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/Video`,
+        addVideoData,
+        config
+      );
+      window.alert("berhasil menambahkan video");
+      setShow(false);
+    } catch (error) {
+      console.error(error);
+    }
+
+    setjudul("");
+    setyoutubeid("");
+    setdeskripsi("");
+    emptyCheckBox();
   }
+
+  useEffect(async () => {
+    try {
+      const response = await getCategory(window.sessionStorage.getItem("token"));
+      setdaftarkategori(response);
+    } catch (error) {
+      console.error(error)    
+    }
+  }, []);
 
   return (
     <div className="mb-6">
@@ -102,43 +120,20 @@ function AddVideo() {
               value={youtubeId}
               onChange={(e) => setyoutubeid(e.target.value)}
             />
-            <span className="w-full flex justify-start text-xl text-black">
+            <span className="w-full flex mb-2 justify-start text-xl text-black">
               Masukkan kategori video (bisa lebih dari 1)
             </span>
-            <div className="flex">
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category1"
-                  name="category1"
-                  value="Tech"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Tech </span>
-              </div>
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category2"
-                  name="category2"
-                  value="Bisnis"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Bisnis </span>
-              </div>
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category3"
-                  name="category3"
-                  value="Desain"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Desain </span>
-              </div>
+            <div id="kategori-box" className="flex flex-col">
+              {daftarkategori && daftarkategori.map((el, index) => (
+                <div className="w-full h-8 flex justify-start items-center" key={"category" + index}>
+                  <input
+                    id={"add?" + el.label}
+                    type="checkbox"
+                    className="w-5 h-5 mr-3 text-xl text-black"
+                  />
+                  <span className="text-xl text-black"> {el.label} </span>
+                </div>
+              ))} 
             </div>
           </form>
           <div className="relative">
@@ -153,9 +148,9 @@ function AddVideo() {
                 onChange={(e) => setdeskripsi(e.target.value)}
               />
             </div>
-            <button 
+            <button
               className="w-48 h-10 bg-buletinBlue text-xl text-white rounded-3xl absolute bottom-4 right-0"
-              onClick={e => clickAddVideo(e)}
+              onClick={(e) => clickAddVideo(e)}
             >
               Tambah video
             </button>

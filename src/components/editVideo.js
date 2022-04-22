@@ -1,34 +1,44 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getCategory } from "./getCategory";
 
 function EditVideo() {
   const [show, setShow] = useState(false);
   const [idvideo, setidvideo] = useState();
   const [judul, setjudul] = useState("");
   const [deskripsi, setdeskripsi] = useState("");
-  const [kategori, updatekategori] = useState([]);
+  const [daftarkategori, setdaftarkategori] = useState();
 
   const buttonShow =
     "w-[50rem] h-20 border-buletinBlue text-white bg-buletinDarkerBlue border-2 rounded-3xl flex justify-start items-center";
   const buttonHide =
     "w-[50rem] h-20 border-buletinBlue text-black border-2 rounded-3xl flex justify-start items-center";
 
-  function handleCheckBox(e) {
-    let arr = kategori;
-    if (e.target.checked) {
-      arr.push(e.target.value);
-    } else {
-      arr.filter((el) => el !== e.target.value);
-    }
-    updatekategori(arr);
+  function handleCheckBox() {
+    let arr = []
+    daftarkategori.map((el) => {
+      if(document.getElementById("edit?"+el.label).checked) {
+        arr.push(el.label);
+        console.log(el.label)
+      }
+    })
+    return arr;
+  }
+
+  function emptyCheckBox() {
+    daftarkategori.map((el) => {
+      if(document.getElementById("edit?"+el.label).checked) {
+        document.getElementById("edit?"+el.label).checked = false;
+      }
+    })
   }
 
   async function clickEditVideo(e) {
     e.preventDefault();
-
+    console.log(handleCheckBox());
     const editVideoData = {
       authorTitle: judul,
-      categorySlugs: kategori,
+      categorySlugs: handleCheckBox(),
       authorDescription: deskripsi,
     };
 
@@ -40,21 +50,32 @@ function EditVideo() {
     };
 
     try {
-      const login = await axios.put(
+      const edit = await axios.put(
         `${process.env.REACT_APP_SERVER_URL}/api/Video/${idvideo}`,
         editVideoData,
         config
       );
-      console.log(login.data);
+      window.alert("berhasil mengubah video");
+      setShow(false);
     } catch (error) {
       console.error(error);
+      window.alert("gagal mengubah video: " + error);
     }
 
     setjudul("");
     setidvideo("");
     setdeskripsi("");
-    updatekategori([]);
+    emptyCheckBox();
   }
+
+  useEffect(async () => {
+    try {
+      const response = await getCategory(window.sessionStorage.getItem("token"));
+      setdaftarkategori(response);
+    } catch (error) {
+      console.error(error)    
+    }
+  }, []);
 
   return (
     <div className="mb-6">
@@ -108,40 +129,17 @@ function EditVideo() {
             <span className="w-full flex justify-start text-xl text-black">
               Masukkan kategori video (bisa lebih dari 1)
             </span>
-            <div className="flex">
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category1"
-                  name="category1"
-                  value="Tech"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Tech </span>
-              </div>
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category2"
-                  name="category2"
-                  value="Bisnis"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Bisnis </span>
-              </div>
-              <div className="w-28 h-14 mb-3 flex justify-start items-center">
-                <input
-                  id="category3"
-                  name="category3"
-                  value="Desain"
-                  type="checkbox"
-                  className="w-5 h-5 mr-3 text-xl text-black"
-                  onChange={(e) => handleCheckBox(e)}
-                />
-                <span className="text-xl text-black"> Desain </span>
-              </div>
+            <div id="kategori-box" className="flex flex-col">
+              {daftarkategori && daftarkategori.map((el, index) => (
+                <div className="w-full h-8 flex justify-start items-center" key={"category" + index}>
+                  <input
+                    id={"edit?" + el.label}
+                    type="checkbox"
+                    className="w-5 h-5 mr-3 text-xl text-black"
+                  />
+                  <span className="text-xl text-black"> {el.label} </span>
+                </div>
+              ))} 
             </div>
           </form>
           <div className="relative">

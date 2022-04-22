@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import AddVideo from "../components/addVideo";
 import AllVideo from "../components/allVideo";
 import CategoryVideo from "../components/categoryVideo";
@@ -7,10 +8,11 @@ import EditVideo from "../components/editVideo";
 import Navbar from "../components/navbar";
 
 function VideoPanel() {
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if(!window.sessionStorage.getItem('token')) {
-      window.location.href = "/login";
+      navigate('/admin');
     }
   }, [])
 

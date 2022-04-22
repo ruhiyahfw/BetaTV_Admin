@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Logout from "./logout";
+import {Link} from 'react-router-dom';
 
 function Navbar() {
   const [showLogout, setShowLogout] = useState(false);
@@ -10,16 +11,16 @@ function Navbar() {
         Beta.TV - Admin Page
       </h1>
       <div className="w-[360px] flex justify-between">
-        <a href="/user">
+        <Link to="/admin/user">
           <span className="text-white font-medium text-2xl"> 
             User 
           </span>
-        </a>
-        <a href="/video">
+        </Link>
+        <Link to="/admin/video">
           <span className="text-white font-medium text-2xl">
             Video 
           </span>
-        </a>
+        </Link>
         <button
           onClick={() => {
             setShowLogout(true);

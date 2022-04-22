@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
+  const navigate = useNavigate();
 
 	async function clickLogin(e) {
 		e.preventDefault();
@@ -20,7 +22,7 @@ function Login() {
 			} else {
 				throw "not an admin";
 			}
-			window.location.href="/user";        
+			navigate('/admin/user');
 		} catch (error) {
 			console.error(error)
 		} 

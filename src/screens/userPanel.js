@@ -1,17 +1,20 @@
 import React, { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import AllUser from "../components/allUser";
 import DeleteUser from "../components/deleteUser";
 import Navbar from "../components/navbar";
 
 function UserPanel() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if(!window.sessionStorage.getItem('token')) {
-      window.location.href = "/login";
+      navigate('/admin');
     }
   }, [])
   useEffect(() => {
     if(!window.sessionStorage.getItem('token')) {
-      window.location.href = "/login";
+      navigate('/admin');
     }
   }, [])
 

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Logout({isShow ,onClick}) {
-	const styleShow = "w-[740px] h-[600px] py-20 px-28 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-buletinLightGray rounded-3xl flex flex-col items-center justify-around"
+    const navigate = useNavigate();
+	
+    const styleShow = "w-[740px] h-[600px] py-20 px-28 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-buletinLightGray rounded-3xl flex flex-col items-center justify-around"
 
   function deleteToken(e) {
     e.preventDefault();
 
     if(window.sessionStorage.getItem('token')) {
       window.sessionStorage.removeItem('token');
-      window.location.href = "/login";
+      navigate('/admin');
     }
   }
 

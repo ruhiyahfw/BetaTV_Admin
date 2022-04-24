@@ -16,7 +16,7 @@ function Login() {
 		}
 
 		try {
-			const login = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/User/login`, loginData);
+			const login = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/user/admin/login`, loginData);
 			if(login.data.data.user.level === 0) {
 				window.sessionStorage.setItem('token', login.data.data.token);
 			} else {

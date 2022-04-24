@@ -10,7 +10,7 @@ function Navbar() {
 	const [user, setUser] = useState(null);
 
 	const meQuery = async () => {
-		fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/me`, {
+		fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/admin/me`, {
 			headers: {
 				Authorization: window.sessionStorage.getItem('token'),
 			},

@@ -10,7 +10,7 @@ export default function ConfirmPage() {
 
 	const sendToken = async () => {
 		setLoading(true);
-		fetch('http://localhost:5000/api/User/confirm/' + token, { method: 'POST' })
+		fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/confirm/` + token, { method: 'POST' })
 			.then((result) => result.json())
 			.then((result) => {
 				setLoading(false);

@@ -34,8 +34,10 @@ function Navbar() {
 	}, []);
 
 	return (
-		<div className="h-32 w-full px-12 bg-buletinBlue flex justify-between items-center">
-			<h1 className="text-white font-semibold text-4xl">Beta.TV</h1>
+		<div className="h-20 w-full px-12 bg-buletinBlue flex justify-between items-center">
+      <Link to={'/admin/user'}>
+			  <h1 className="text-white font-semibold text-4xl">Beta.TV</h1>
+      </Link>
 			<div className="w-[360px] flex justify-between items-center">
 				<Link to="/admin/user">
 					<span className="text-white font-medium text-2xl">User</span>
@@ -49,8 +51,8 @@ function Navbar() {
 					}}
 					className="flex flex-col items-center"
 				>
-					{user && <span className="text-orange-400 font-medium text-base">{user.name}</span>}
-					<span className="text-white font-medium text-2xl">Logout</span>
+					{user && <span className="text-orange-400 font-medium text-xl">{user.username}</span>}
+					<span className="text-white font-medium text-sm">Logout</span>
 				</button>
 			</div>
 			<Logout isShow={showLogout} onClick={() => setShowLogout(false)} />

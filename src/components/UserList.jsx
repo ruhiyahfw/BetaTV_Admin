@@ -5,7 +5,7 @@ import Loading from './svg-icons/loading';
 
 const UserList = () => {
 	const [users, setUsers] = useState(null);
-	const [itemCount, setItemCount] = useState(5);
+	const [itemCount, setItemCount] = useState(10);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [userDisplay, setUserDisplay] = useState(null);
 
@@ -29,8 +29,8 @@ const UserList = () => {
 				if (result.success) {
 					toast.success('Akun berhasil dihapus');
 					setUsers((prev) => {
-						if (prev != null) {
-							return prev.filter((usr) => usr.id != user.id);
+						if (prev !== null) {
+							return prev.filter((usr) => usr.id !== user.id);
 						}
 					});
 				} else {
@@ -99,12 +99,12 @@ const UserList = () => {
 	}
 
 	return (
-		<div>
+		<div className='pb-10'>
 			<div className="mb-4 flex justify-between shadow-md bg-buletinLightGray sm:rounded-lg text-black">
 				<div className="px-4 py-1 w-full items-center flex justify-between">
 					<div className="flex gap-2">
 						<p>Tampilkan</p>
-						<select onChange={(e) => handleCountOptions(e.target.value)} name="itemCountOptions" id="itemCountOptions">
+						<select onChange={(e) => handleCountOptions(e.target.value)} name="itemCountOptions" id="itemCountOptions" value={itemCount}>
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="20">20</option>
@@ -120,7 +120,7 @@ const UserList = () => {
 						</p>
 					</div>
 				</div>
-				<div className="flex">
+				<div className="flex shadow-md rounded-lg">
 					<button className="active:bg-buletinDarkBlue text-white border-r-[1px] font-bold bg-buletinBlue w-[50px] rounded-tl-lg rounded-bl-lg" onClick={() => updatePageNumber(-1)}>
 						{'<'}
 					</button>

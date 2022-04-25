@@ -100,64 +100,68 @@ const UserList = () => {
 
 	return (
 		<div>
-			<div className="px-4 py-1 mb-4 flex justify-between shadow-md bg-buletinLightGray sm:rounded-lg text-black items-center">
-				<div className="flex gap-2">
-					<p>Tampilkan</p>
-					<select onChange={(e) => handleCountOptions(e.target.value)} name="itemCountOptions" id="itemCountOptions">
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="40">40</option>
-						<option value="75">75</option>
-						<option value="100">100</option>
-					</select>
-					<p>item dari total {users.length}</p>
+			<div className="mb-4 flex justify-between shadow-md bg-buletinLightGray sm:rounded-lg text-black">
+				<div className="px-4 py-1 w-full items-center flex justify-between">
+					<div className="flex gap-2">
+						<p>Tampilkan</p>
+						<select onChange={(e) => handleCountOptions(e.target.value)} name="itemCountOptions" id="itemCountOptions">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="40">40</option>
+							<option value="75">75</option>
+							<option value="100">100</option>
+						</select>
+						<p>item dari total {users.length}</p>
+					</div>
+					<div className="flex gap-6">
+						<p>
+							Halaman {pageNumber} dari {Math.ceil(users.length / itemCount)}
+						</p>
+					</div>
 				</div>
-				<div className="flex gap-6">
-					<p>
-						Halaman {pageNumber} dari {Math.ceil(users.length / itemCount)}
-					</p>
-					<button className="font-bold" onClick={() => updatePageNumber(-1)}>
+				<div className="flex">
+					<button className="active:bg-buletinDarkBlue text-white border-r-[1px] font-bold bg-buletinBlue w-[50px] rounded-tl-lg rounded-bl-lg" onClick={() => updatePageNumber(-1)}>
 						{'<'}
 					</button>
-					<button className="font-bold" onClick={() => updatePageNumber(1)}>
+					<button className="active:bg-buletinDarkBlue text-white font-bold bg-buletinBlue w-[50px] rounded-tr-lg rounded-br-lg" onClick={() => updatePageNumber(1)}>
 						{'>'}
 					</button>
 				</div>
 			</div>
 			<div className="relative px-8 pt-4 pb-8 overflow-x-auto shadow-md sm:rounded-lg bg-buletinLightGray">
-				<table className="w-full text-sm text-left text-black">
+				<table className="w-full text-sm text-left text-black table-fixed">
 					<thead className="text-xs border-b-2 border-black uppercase text-center">
 						<tr>
-							<th scope="col" className="px-2 py-3">
+							<th scope="col" className="w-10">
 								No
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="w-2/12">
 								Username
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="w-auto">
 								Name
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="w-1/4">
 								Email
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="w-1/12">
 								Confirmed
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="w-1/12">
 								Action
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						{userDisplay.map((user, idx) => (
-							<tr key={user.id} className="border-b border-gray-400 hover:bg-buletinLightGray text-center text-black">
-								<td className="px-2 py-4">{idx + 1}</td>
-								<td className="px-6 py-4">{user.username}</td>
-								<td className="px-6 py-4">{user.name}</td>
-								<td className="px-6 py-4">{user.email}</td>
-								<td className="px-6 py-4">{user.isConfirmed ? 'True' : 'False'}</td>
-								<td className="px-6 py-4 flex justify-center">
+							<tr key={user.id} className="border-b border-gray-400 hover:bg-gray-300 text-center text-black">
+								<td>{idx + 1}</td>
+								<td>{user.username}</td>
+								<td>{user.name}</td>
+								<td>{user.email}</td>
+								<td>{user.isConfirmed ? 'True' : 'False'}</td>
+								<td className="flex justify-center py-3">
 									<button disabled={user.loading} onClick={() => deleteUser(user, idx)}>
 										{user.loading ? <Loading className="fill-orange-400" /> : <Trash className="fill-buletinBlue" />}
 									</button>

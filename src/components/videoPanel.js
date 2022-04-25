@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import AddVideo from "../components/addVideo";
-import AllVideo from "../components/allVideo";
-import CategoryVideo from "../components/categoryVideo";
-import DeleteVideo from "../components/deleteVideo";
-import EditVideo from "../components/editVideo";
-import Navbar from "../components/navbar";
+import AddVideo from "./addVideo";
+import AllVideo from "./allVideo";
+import CategoryVideo from "./categoryVideo";
+import DeleteVideo from "./deleteVideo";
+import EditVideo from "./editVideo";
+import Navbar from "./navbar";
 
 function VideoPanel() {
   const navigate = useNavigate();

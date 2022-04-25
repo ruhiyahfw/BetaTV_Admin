@@ -1,8 +1,8 @@
 import Navbar from "../components/navbar";
 import { Route, Routes, Navigate} from "react-router-dom";
 import {ToastContainer} from 'react-toastify'
-import UserPanel from "./userPanel";
-import VideoPanel from "./videoPanel";
+import UserPanel from "../components/userPanel";
+import VideoPanel from "../components/videoPanel";
 
 const AdminPage = () => {
   return (

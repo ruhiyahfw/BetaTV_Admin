@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
-import Navbar from './components/navbar';
 import { ToastContainer } from 'react-toastify';
 import Login from './screens/login';
-import UserPanel from './screens/userPanel';
-import VideoPanel from './screens/videoPanel';
 import ConfirmPage from './screens/ConfirmPage';
 import HomePage from './screens/HomePage';
+import AdminPage from './screens/AdminPage';
 
 function App() {
 
@@ -16,11 +14,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/confirm/:token" element={<ConfirmPage />} />
         <Route path="/admin" element={<Login />} />
-        <Route path="/admin/user" element={<UserPanel />} />
-        <Route path="/admin/video" element={<VideoPanel />} />
+        <Route path="/admin/*" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      <ToastContainer />
     </BrowserRouter>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import Navbar from './components/navbar';
+import { ToastContainer } from 'react-toastify';
 import Login from './screens/login';
 import UserPanel from './screens/userPanel';
 import VideoPanel from './screens/videoPanel';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/admin/video" element={<VideoPanel />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

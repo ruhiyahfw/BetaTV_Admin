@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -29,6 +30,13 @@ function Login() {
 		setusername('');
 		setpassword('');  
 	}
+
+  useEffect(()=>{
+    const token = window.sessionStorage.getItem("token");
+    if (token != null && token.length >= 4){
+      navigate("/admin/user");
+    }
+  },[]);
 
 	return (
     <div className="w-screen h-full flex">

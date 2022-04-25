@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({setCurrentMe}) {
 	const navigate = useNavigate();
 	const [showLogout, setShowLogout] = useState(false);
 	const [user, setUser] = useState(null);
@@ -19,6 +19,7 @@ function Navbar() {
 			.then((result) => {
 				if (result.success) {
 					setUser(result.data.user);
+          setCurrentMe(result.data.user);
 					return;
 				}
 				window.sessionStorage.removeItem('token');

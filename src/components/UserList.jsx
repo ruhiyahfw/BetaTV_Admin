@@ -3,7 +3,7 @@ import Trash from './svg-icons/trash';
 import { toast } from 'react-toastify';
 import Loading from './svg-icons/loading';
 
-const UserList = () => {
+const UserList = ({me}) => {
 	const [users, setUsers] = useState(null);
 	const [itemCount, setItemCount] = useState(10);
 	const [pageNumber, setPageNumber] = useState(1);
@@ -94,7 +94,7 @@ const UserList = () => {
 		setPageNumber(1);
 	};
 
-	if (userDisplay == null) {
+	if (userDisplay == null || me == null) {
 		return <h1>Loading...</h1>;
 	}
 
@@ -162,7 +162,7 @@ const UserList = () => {
 								<td>{user.email}</td>
 								<td>{user.isConfirmed ? 'True' : 'False'}</td>
 								<td className="flex justify-center py-3">
-									<button disabled={user.loading} onClick={() => deleteUser(user, idx)}>
+									<button disabled={user.loading || me.id == user.id} onClick={() => deleteUser(user, idx)}>
 										{user.loading ? <Loading className="fill-orange-400" /> : <Trash className="fill-buletinBlue" />}
 									</button>
 								</td>

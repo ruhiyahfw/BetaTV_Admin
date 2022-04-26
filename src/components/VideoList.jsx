@@ -175,7 +175,7 @@ const UserList = () => {
 								<tr key={video.id} className="border-b border-gray-400 hover:bg-gray-300 text-center text-black">
 									<td>{idx + 1}</td>
 									<td>{video.youtubeVideoId}</td>
-									<td className='truncate text-left'>{video.title}</td>
+									<td className='truncate text-left'>{video.authorTitle}</td>
 									<td className='truncate text-left'> { getCategoryVideo(video)} </td>
 									<td className='underline text-violet-500'><a href={video.url} target="_blank"> lihat video</a></td>
 									<td className="flex justify-center space-x-3 py-3">

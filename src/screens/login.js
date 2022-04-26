@@ -2,10 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import Loading from '../components/svg-icons/loading';
+import {toast} from 'react-toastify'
 
 function Login() {
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
 	async function clickLogin(e) {
@@ -17,18 +20,16 @@ function Login() {
 		}
 
 		try {
+      setLoading(true);
 			const login = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/user/admin/login`, loginData);
-			if(login.data.data.user.level === 0) {
-				window.sessionStorage.setItem('token', login.data.data.token);
-			} else {
-				throw "not an admin";
-			}
+      setLoading(false);
+			window.sessionStorage.setItem('token', login.data.data.token);
 			navigate('/admin/user');
 		} catch (error) {
+      setLoading(false);
+      toast.error('Login Gagal');
 			console.error(error)
 		} 
-		setusername('');
-		setpassword('');  
 	}
 
   useEffect(()=>{
@@ -43,7 +44,7 @@ function Login() {
       <div className="w-1/2 h-screen py-24 bg-buletinBlue flex flex-col items-center justify-between">
 				<img
 					className="w-80 h-80 object-contain"
-					src={require("../icons/login_logo.png")}
+					src={require("../assets/img/beta_logo.png")}
 				/>
         <div className="flex flex-col items-center justify-around">
           <h1 className="text-9xl text-white font-medium mb-7">Beta.TV</h1>
@@ -58,7 +59,7 @@ function Login() {
 						<input
 							type="text"
 							id="username-input"
-							className="w-full h-16 px-4 border-2 border-buletinBlue rounded-3xl text-3xl"
+							className="w-full h-16 px-4 border-2 border-buletinBlue rounded-3xl text-3xl text-black"
 							placeholder=""
 							value={username}
 							onChange={(e) => setusername(e.target.value)}
@@ -69,7 +70,7 @@ function Login() {
 						<input
 							type="password"
 							id="password-input"
-							className="w-full h-16 px-4 border-2 border-buletinBlue rounded-3xl text-3xl"
+							className="w-full h-16 px-4 border-2 border-buletinBlue rounded-3xl text-3xl text-black"
 							placeholder=""
 							value={password}
 							onChange={(e) => setpassword(e.target.value)}
@@ -77,10 +78,19 @@ function Login() {
 					</div>
 				</div>
 				<button 
-					className="w-60 h-16 text-white text-3xl font-medium rounded-full bg-buletinDarkBlue"
+          disabled={loading || username === "" || password === ""}
+					className="flex items-center justify-center gap-2 shadow-md w-60 h-16 text-white text-xl font-medium rounded-full bg-buletinDarkBlue"
 					onClick={e => clickLogin(e)}
 				> 
-					Login 
+					{loading ? 
+          <>
+            <Loading className='fill-orange-500' />
+            Please wait...
+          </> : 
+          <>
+            Login
+          </>
+          }
 				</button>
 			</form>
     </div>

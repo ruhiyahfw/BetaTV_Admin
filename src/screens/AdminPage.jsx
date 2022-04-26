@@ -23,7 +23,6 @@ const AdminPage = () => {
           <Route path="*" element={<Navigate to="/admin" />} />
         </Routes>
       </section>
-      <ToastContainer />
     </>
   )
 }

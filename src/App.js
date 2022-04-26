@@ -17,6 +17,7 @@ function App() {
         <Route path="/admin/*" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

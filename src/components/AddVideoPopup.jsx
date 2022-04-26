@@ -75,7 +75,7 @@ export default function AddVideoPopUp({ isShow, onClick }) {
   }, []);
 
   return (
-    <div className={isShow ? styleShow : "hidden"}>
+    <div id="container-edit-video" className={isShow ? styleShow : "hidden"}>
       <form>
         <span className="w-full mb-3 flex justify-start text-base text-white font-medium">
           Masukkan judul video

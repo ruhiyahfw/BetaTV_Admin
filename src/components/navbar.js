@@ -45,7 +45,7 @@ function Navbar() {
 				<Link to="/admin/video">
 					<span className="text-white font-medium text-2xl">Video</span>
 				</Link>
-				<Link to="/admin/video">
+				<Link to="/admin/kategori">
 					<span className="text-white font-medium text-2xl">Kategori</span>
 				</Link>
 				<button

@@ -11,20 +11,20 @@ const UserList = () => {
 	const [itemCount, setItemCount] = useState(10);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [videoDisplay, setVideoDisplay] = useState(null);
-	const [idEditVideo, setIdEditVideo] = useState(null);
+	const [idEditVideo, setIdEditVideo] = useState(2);
 	const [showEditvideo, setShowEditVideo] = useState(false);
 	const [showAddvideo, setShowAddVideo] = useState(false);
 
-/* 	const deleteUser = async (user, idx) => {
-		const ok = window.confirm('Anda yakin akan menghapus akun ' + user.name);
+ 	const deleteVideo = async (video, idx) => {
+		const ok = window.confirm('Anda yakin akan menghapus video "' + video.title + '"');
 		if (!ok) {
 			return;
 		}
 
 		const temp = [...videoDisplay];
 		temp[idx].loading = true;
-		setUserDisplay(temp);
-		fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/${user.id}`, {
+		setVideoDisplay(temp);
+		fetch(`${process.env.REACT_APP_SERVER_URL}/api/Video/${video.id}`, {
 			method: 'DELETE',
 			headers: {
 				Authorization: window.sessionStorage.getItem('token'),
@@ -33,14 +33,14 @@ const UserList = () => {
 			.then((result) => result.json())
 			.then((result) => {
 				if (result.success) {
-					toast.success('Akun berhasil dihapus');
+					toast.success('Video berhasil dihapus');
 					setVideos((prev) => {
 						if (prev !== null) {
-							return prev.filter((usr) => usr.id !== user.id);
+							return prev.filter((vid) => vid.id !== video.id);
 						}
 					});
 				} else {
-					toast.error('Gagal menghapus akun');
+					toast.error('Gagal menghapus video');
 					const temp = [...videoDisplay];
 					temp[idx].loading = true;
 					setVideoDisplay(temp);
@@ -52,7 +52,7 @@ const UserList = () => {
 				temp[idx].loading = true;
 				setVideoDisplay(temp);
 			});
-	}; */
+	}; 
 
 	const getAllvideo = async () => {
 		fetch(`${process.env.REACT_APP_SERVER_URL}/api/Video/`, {
@@ -115,7 +115,7 @@ const UserList = () => {
 
 	return (
 		<div className='pb-10'>
-			<EditVideoPopup id={idEditVideo} isShow={showEditvideo} onClick={() => setShowEditVideo(false)}/>
+			<EditVideoPopup idvideo={idEditVideo} isShow={showEditvideo} onClick={() => setShowEditVideo(false)}/>
 			<AddVideoPopUp isShow={showAddvideo} onClick={() => setShowAddVideo(false)}/>
 			<div className="mb-4 flex justify-between shadow-md bg-buletinLightGray sm:rounded-lg text-black">
 				<div className="px-4 py-1 w-full items-center flex justify-between">
@@ -176,13 +176,19 @@ const UserList = () => {
 									<td>{idx + 1}</td>
 									<td>{video.youtubeVideoId}</td>
 									<td className='truncate text-left'>{video.title}</td>
-									<td className='truncate text-left'> { getCategoryVideo(video)} </td>
+									<td className='truncate'> { getCategoryVideo(video)} </td>
 									<td className='underline text-violet-500'><a href={video.url} target="_blank"> lihat video</a></td>
 									<td className="flex justify-center space-x-3 py-3">
-										<button disabled={video.loading} onClick={() => setShowEditVideo(true)}>
+										<button 
+											disabled={video.loading} 
+											onClick={() => {
+												setShowEditVideo(true);
+												setIdEditVideo(video.id);
+											}}
+										>
 											{video.loading ? <Loading className="fill-orange-400" /> : <Pen className="fill-buletinBlue" />}
 										</button>
-										<button disabled={video.loading} >
+										<button disabled={video.loading} onClick={() => deleteVideo(video, idx)}>
 											{video.loading ? <Loading className="fill-orange-400" /> : <Trash className="fill-buletinBlue" />}
 										</button>
 									</td>

@@ -52,6 +52,7 @@ export default function AddVideoPopUp({ isShow, onClick }) {
         config
       );
       window.alert("berhasil menambahkan video");
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -110,7 +111,7 @@ export default function AddVideoPopUp({ isShow, onClick }) {
                 key={"category" + index}
               >
                 <input
-                  id={"edit?" + el.label}
+                  id={"add?" + el.label}
                   type="checkbox"
                   className="w-5 h-5 mr-3 text-base text-white"
                 />

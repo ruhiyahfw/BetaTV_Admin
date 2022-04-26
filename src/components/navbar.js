@@ -39,12 +39,15 @@ function Navbar({setCurrentMe}) {
       <Link to={'/admin/user'}>
 			  <h1 className="text-white font-semibold text-4xl">Beta.TV</h1>
       </Link>
-			<div className="w-[360px] flex justify-between items-center">
+			<div className="w-[500px] flex justify-between items-center">
 				<Link to="/admin/user">
 					<span className="text-white font-medium text-2xl">User</span>
 				</Link>
 				<Link to="/admin/video">
 					<span className="text-white font-medium text-2xl">Video</span>
+				</Link>
+				<Link to="/admin/video">
+					<span className="text-white font-medium text-2xl">Kategori</span>
 				</Link>
 				<button
 					onClick={() => {

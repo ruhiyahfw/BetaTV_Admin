@@ -19,6 +19,7 @@ const AdminPage = () => {
         <Routes>
           <Route path="/user" element={<UserPanel me={me} />} />
           <Route path="/video" element={<VideoPanel />} />
+          <Route path="/kategori" element={<VideoPanel />} />
           <Route path="*" element={<Navigate to="/admin" />} />
         </Routes>
       </section>

@@ -6,6 +6,7 @@ import CategoryVideo from "./categoryVideo";
 import DeleteVideo from "./deleteVideo";
 import EditVideo from "./editVideo";
 import Navbar from "./navbar";
+import VideoList from "./VideoList";
 
 function VideoPanel() {
   const navigate = useNavigate();
@@ -20,13 +21,9 @@ function VideoPanel() {
     <div>
       <div className="w-full px-12 mt-8 mb-6 flex flex-col">
         <h1 className="mb-6 text-4xl text-buletinDarkBlue font-medium">
-          Menu User
+          Videos
         </h1>
-        <AddVideo/>
-        <EditVideo/>
-        <DeleteVideo/>
-        <AllVideo/>
-        <CategoryVideo/>
+        <VideoList/>
       </div>
     </div>
   );

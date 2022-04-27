@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { getCategory } from "./getCategory";
 
 export default function CategoryList() {
   const [daftarkategori, setdaftarkategori] = useState();
   const [kategoriBaru, setKategoriBaru] = useState();
+  const [update, setUpdate] = useState(0);
 
   async function clickAddCategory(e) {
     e.preventDefault();
@@ -18,7 +20,7 @@ export default function CategoryList() {
         Authorization: window.sessionStorage.getItem("token"),
       },
     };
-
+/* 
     try {
       const add = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/Category`,
@@ -29,9 +31,26 @@ export default function CategoryList() {
       window.location.reload();
     } catch (error) {
       console.error(error);
+    } */
+    try {
+      const add = await toast.promise(
+        axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/api/Category`,
+          addVideoData,
+          config
+        ), 
+        {
+          pending: 'mencoba menambah kategori..',
+          success: 'kategori berhasil ditambah',
+          error: 'gagal menambah kategori'
+        }
+      ); 
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setKategoriBaru("");
+      setUpdate(update + 1);
     }
-
-    setKategoriBaru("");
   }
 
   useEffect(async () => {
@@ -43,7 +62,7 @@ export default function CategoryList() {
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [update]);
 
   if (daftarkategori == null) {
 		return <h1>Loading...</h1>;

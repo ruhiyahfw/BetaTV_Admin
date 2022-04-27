@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { getCategory } from "./getCategory";
 
-export default function AddVideoPopUp({ isShow, onClick }) {
+export default function AddVideoPopUp({ isShow, close }) {
   const [judul, setjudul] = useState("");
   const [youtubeId, setyoutubeid] = useState("");
   const [deskripsi, setdeskripsi] = useState("");
@@ -45,22 +46,41 @@ export default function AddVideoPopUp({ isShow, onClick }) {
       },
     };
 
-    try {
+/*     try {
       const add = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/Video`,
         addVideoData,
         config
       );
-      window.alert("berhasil menambahkan video");
-      window.location.reload();
+      toast.success("berhasil menambahkan video");    
+    } catch (error) {
+      toast.error("gagal menambahkan video");
+      console.error(error);
+    } finally {
+      close();
+    } */
+    try {
+      const add = await toast.promise(
+        axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/api/Video`,
+          addVideoData,
+          config
+        ), 
+        {
+          pending: 'mencoba menambah video..',
+          success: 'video berhasil ditambah',
+          error: 'gagal menambah video'
+        }
+      ); 
     } catch (error) {
       console.error(error);
+    } finally {
+      setjudul("");
+      setyoutubeid("");
+      setdeskripsi("");
+      emptyCheckBox();
+      close();
     }
-
-    setjudul("");
-    setyoutubeid("");
-    setdeskripsi("");
-    emptyCheckBox();
   }
 
   useEffect(async () => {
@@ -142,7 +162,7 @@ export default function AddVideoPopUp({ isShow, onClick }) {
         </button>
         <button
           className="w-48 h-10 bg-buletinLightGray text-base text-black rounded-3xl absolute bottom-0 right-52"
-          onClick={onClick}
+          onClick={close}
         >
           Tutup
         </button>

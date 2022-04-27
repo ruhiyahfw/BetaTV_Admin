@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import AddVideo from "./addVideo";
-import AllVideo from "./allVideo";
-import CategoryVideo from "./categoryVideo";
-import DeleteVideo from "./deleteVideo";
-import EditVideo from "./editVideo";
-import Navbar from "./navbar";
+import AddVideoPopUp from "./AddVideoPopup";
+import EditVideoPopup from "./EditVideoPopup";
 import VideoList from "./VideoList";
 
 function VideoPanel() {
+  const [idEditVideo, setIdEditVideo] = useState(2);
+  const [showEditvideo, setShowEditVideo] = useState(false);
+  const [showAddvideo, setShowAddVideo] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {

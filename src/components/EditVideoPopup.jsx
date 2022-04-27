@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { getCategory } from "./getCategory";
 
-export default function EditVideoPopup({ idvideo, isShow, onClick }) {
+export default function EditVideoPopup({ idvideo, isShow, close }) {
   const [judul, setjudul] = useState("");
   const [deskripsi, setdeskripsi] = useState("");
   const [daftarkategori, setdaftarkategori] = useState();
@@ -45,21 +46,41 @@ export default function EditVideoPopup({ idvideo, isShow, onClick }) {
       },
     };
 
-    try {
+/*     try {
       const edit = await axios.put(
         `${process.env.REACT_APP_SERVER_URL}/api/Video/${idvideo}`,
         editVideoData,
         config
       );
-      window.alert("berhasil mengubah video");
+      toast.success("berhasil mengubah video");
+    } catch (error) {
+      toast.error("gagal mengubah video");
+      console.error(error);
+    } finally {
+      onClick();
+    } */
+
+    try {
+      const edit = await toast.promise(
+        axios.put(
+          `${process.env.REACT_APP_SERVER_URL}/api/Video/${idvideo}`,
+          editVideoData,
+          config
+        ), 
+        {
+          pending: 'mencoba mengubah video..',
+          success: 'video berhasil diubah',
+          error: 'video gagal diubah'
+        }
+      ); 
     } catch (error) {
       console.error(error);
-      window.alert("gagal mengubah video: " + error);
+    } finally {
+      setjudul("");
+      setdeskripsi("");
+      emptyCheckBox();
+      close();
     }
-
-    setjudul("");
-    setdeskripsi("");
-    emptyCheckBox();
   }
 
   useEffect(async () => {
@@ -130,7 +151,7 @@ export default function EditVideoPopup({ idvideo, isShow, onClick }) {
         </button>
 				<button
           className="w-48 h-10 bg-buletinLightGray text-base text-black rounded-3xl absolute bottom-0 right-52"
-          onClick={onClick}
+          onClick={close}
         >
           Tutup
         </button>

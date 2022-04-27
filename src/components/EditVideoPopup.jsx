@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getCategory } from "./getCategory";
 
-export default function EditVideoPopup({ idvideo, isShow, close }) {
+export default function EditVideoPopup({ idVideo, isShow, close }) {
   const [judul, setjudul] = useState("");
   const [deskripsi, setdeskripsi] = useState("");
   const [daftarkategori, setdaftarkategori] = useState();
@@ -14,9 +14,9 @@ export default function EditVideoPopup({ idvideo, isShow, close }) {
   function handleCheckBox() {
     let arr = [];
     daftarkategori.map((el) => {
-      if (document.getElementById("edit?" + el.label).checked) {
-        arr.push(el.label);
-        console.log(el.label);
+      if (document.getElementById("edit?" + el.slug).checked) {
+        arr.push(el.slug);
+        console.log(el.slug);
       }
     });
     return arr;
@@ -24,8 +24,8 @@ export default function EditVideoPopup({ idvideo, isShow, close }) {
 
   function emptyCheckBox() {
     daftarkategori.map((el) => {
-      if (document.getElementById("edit?" + el.label).checked) {
-        document.getElementById("edit?" + el.label).checked = false;
+      if (document.getElementById("edit?" + el.slug).checked) {
+        document.getElementById("edit?" + el.slug).checked = false;
       }
     });
   }
@@ -42,7 +42,7 @@ export default function EditVideoPopup({ idvideo, isShow, close }) {
     const config = {
       headers: {
         Authorization: window.sessionStorage.getItem("token"),
-        id: idvideo,
+        id: idVideo,
       },
     };
 
@@ -63,7 +63,7 @@ export default function EditVideoPopup({ idvideo, isShow, close }) {
     try {
       const edit = await toast.promise(
         axios.put(
-          `${process.env.REACT_APP_SERVER_URL}/api/Video/${idvideo}`,
+          `${process.env.REACT_APP_SERVER_URL}/api/Video/${idVideo}`,
           editVideoData,
           config
         ), 
@@ -120,11 +120,11 @@ export default function EditVideoPopup({ idvideo, isShow, close }) {
                 key={"category" + index}
               >
                 <input
-                  id={"edit?" + el.label}
+                  id={"edit?" + el.slug}
                   type="checkbox"
                   className="w-5 h-5 mr-3 text-base text-white"
                 />
-                <span className="text-base text-white"> {el.label} </span>
+                <span className="text-base text-white"> {el.slug} </span>
               </div>
             ))}
         </div>

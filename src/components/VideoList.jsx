@@ -120,7 +120,7 @@ const VideoList = () => {
   return (
     <div className="pb-10">
       <EditVideoPopup
-        idvideo={idEditVideo}
+        idVideo={idEditVideo}
         isShow={showEditvideo}
         close={() => {
           setShowEditVideo(false);

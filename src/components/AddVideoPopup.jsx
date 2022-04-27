@@ -15,8 +15,8 @@ export default function AddVideoPopUp({ isShow, close }) {
   function handleCheckBox() {
     let arr = [];
     daftarkategori.map((el) => {
-      if (document.getElementById("add?" + el.label).checked) {
-        arr.push(el.label);
+      if (document.getElementById("add?" + el.slug).checked) {
+        arr.push(el.slug);
       }
     });
     return arr;
@@ -24,8 +24,8 @@ export default function AddVideoPopUp({ isShow, close }) {
 
   function emptyCheckBox() {
     daftarkategori.map((el) => {
-      if (document.getElementById("add?" + el.label).checked) {
-        document.getElementById("add?" + el.label).checked = false;
+      if (document.getElementById("add?" + el.slug).checked) {
+        document.getElementById("add?" + el.slug).checked = false;
       }
     });
   }
@@ -131,11 +131,11 @@ export default function AddVideoPopUp({ isShow, close }) {
                 key={"category" + index}
               >
                 <input
-                  id={"add?" + el.label}
+                  id={"add?" + el.slug}
                   type="checkbox"
                   className="w-5 h-5 mr-3 text-base text-white"
                 />
-                <span className="text-base text-white"> {el.label} </span>
+                <span className="text-base text-white"> {el.slug} </span>
               </div>
             ))}
         </div>
